@@ -1,4 +1,5 @@
 package test;
+
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -6,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TopicManagerSingleton {
 
 
-    public static class TopicManager{
+    public static class TopicManager {
         private static final TopicManager instance = new TopicManager();
         private ConcurrentHashMap<String, Topic> topics;
 
@@ -17,13 +18,13 @@ public class TopicManagerSingleton {
         public Topic getTopic(String name) {
             if (this.topics.containsKey(name)) {
                 return this.topics.get(name);
-            }
-            else {
+            } else {
                 Topic t = new Topic(name);
                 this.topics.put(name, t);
                 return t;
             }
         }
+
         public Collection<Topic> getTopics() {
             return this.topics.values();
         }
@@ -36,5 +37,5 @@ public class TopicManagerSingleton {
     public static TopicManager get() {
         return TopicManager.instance;
     }
-    
+
 }

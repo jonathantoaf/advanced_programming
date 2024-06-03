@@ -10,21 +10,24 @@ public class ParallelAgent implements Agent {
     private static final String divider = "Divider:";
 
 
-    ParallelAgent(Agent agent, int capacity) {
+    public ParallelAgent(Agent agent, int capacity) {
         this.queue = new ArrayBlockingQueue<Message>(capacity);
         this.agent = agent;
         this.readThread = new Thread(this::readThreadFunction);
         this.readThread.start();
     }
 
+    @Override
     public String getName() {
         return this.agent.getName();
     }
 
+    @Override
     public void reset() {
         this.agent.reset();
     }
 
+    @Override
     public void callback(String topic, Message msg) {
         try {
             Message topicMessageMerge = new Message(String.format("%s%s%s", topic, divider, msg.asText));
@@ -34,6 +37,7 @@ public class ParallelAgent implements Agent {
         }
     }
 
+    @Override
     public void close() {
         this.readThread.interrupt();
         this.agent.close();
