@@ -20,13 +20,14 @@ public class Message {
         this(convertBytesToString(messageBytes));
     }
 
+    public Message(double messageDouble) {
+        this(convertDoubleToString(messageDouble));
+    }
+
     public String toString() {
         return String.format("Message: text='%s', double=%f, date=%s", asText, asDouble, date);
     }
 
-    public Message(double messageDouble) {
-        this(convertDoubleToString(messageDouble));
-    }
 
     private static String convertDoubleToString(double messageDouble) {
         return Double.toString(messageDouble);
@@ -53,9 +54,9 @@ public class Message {
         System.out.println(message);
         Message message2 = new Message(3.14159);
         System.out.println(message2);
-        Message message3 = new Message(new byte[] { 72, 101, 108, 108, 111 });
+        Message message3 = new Message(new byte[]{72, 101, 108, 108, 111});
         System.out.println(message3);
         Message message4 = new Message("3.14159");
         System.out.println(message4);
     }
-    }
+}
