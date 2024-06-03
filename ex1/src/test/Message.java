@@ -49,14 +49,4 @@ public class Message {
         }
     }
 
-    public static void main(String[] args) {
-        Message message = new Message("Hello, World!");
-        System.out.println(message);
-        Message message2 = new Message(3.14159);
-        System.out.println(message2);
-        Message message3 = new Message(new byte[]{72, 101, 108, 108, 111});
-        System.out.println(message3);
-        Message message4 = new Message("3.14159");
-        System.out.println(message4);
-    }
 }

@@ -28,7 +28,6 @@ public class ParallelAgent implements Agent {
     public void callback(String topic, Message msg) {
         try {
             Message topicMessageMerge = new Message(String.format("%s%s%s", topic, divider, msg.asText));
-            System.out.println("ParallelAgent callback: " + topicMessageMerge.asText);
             this.queue.put(topicMessageMerge);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -38,17 +37,14 @@ public class ParallelAgent implements Agent {
     public void close() {
         this.readThread.interrupt();
         this.agent.close();
-        System.out.println("ParallelAgent close");
     }
 
     private String getTopic(Message msg) {
-        System.out.println("ParallelAgent getTopic: " + msg.asText.split(divider, 2)[0]);
         return msg.asText.split(divider, 2)[0];
     }
 
     private Message getMessage(Message msg) {
 //        get all the text after the first colon
-        System.out.println("ParallelAgent getMessage: " + msg.asText.split(divider, 2)[1]);
         return new Message(msg.asText.split(divider, 2)[1]);
     }
 
