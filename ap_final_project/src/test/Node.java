@@ -51,8 +51,8 @@ public class Node {
     }
 
     public boolean hasCycles() {
-        Set<Node> visited = new HashSet<>();      // Set to keep track of visited nodes
-        Set<Node> recursionStack = new HashSet<>(); // Set to keep track of nodes in the recursion stack
+        Set<Node> visited = new HashSet<>();
+        Set<Node> recursionStack = new HashSet<>();
         return dfs(this, visited, recursionStack);
     }
 
