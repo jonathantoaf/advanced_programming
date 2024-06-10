@@ -23,6 +23,7 @@ public class GenericConfig implements Config {
         this.ConfFile = ConfFile;
     }
 
+    @Override
     public void create() {
         List<String> lines = readConfFileLines(ConfFile);
         if (lines == null || lines.size() % 3 != 0) {
@@ -45,14 +46,17 @@ public class GenericConfig implements Config {
         }
     }
 
+    @Override
     public String getName() {
         return "GenericConfig";
     }
 
+    @Override
     public int getVersion() {
         return 1;
     }
 
+    @Override
     public void close() {
         for (ParallelAgent parallelAgent : parallelAgents) {
             parallelAgent.close();
