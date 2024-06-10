@@ -11,8 +11,8 @@ public class IncAgent implements Agent {
     private Double x;
 
     public IncAgent(List<String> subs, List<String> pubs) {
-        this.subs = subs.getFirst();
-        this.pubs = pubs.getFirst();
+        this.subs = subs.get(0);
+        this.pubs = pubs.get(0);
         this.subscribe();
         this.reset();
         this.name = "IncAgent";
