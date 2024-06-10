@@ -20,4 +20,9 @@ public class MathExampleConfig implements Config {
         return 1;
     }
 
+    @Override
+    public void close() {
+        // Do nothing
+    }
+
 }
