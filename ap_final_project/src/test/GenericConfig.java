@@ -30,10 +30,10 @@ public class GenericConfig implements Config {
             throw new IllegalArgumentException("Invalid configuration file");
         }
         for (int i = 0; i < lines.size(); i += 3) {
-            List<String> subs = Arrays.asList(lines.get(i + 1).split(","));
-            List<String> pubs = Arrays.asList(lines.get(i + 2).split(","));
+            String[] subs = lines.get(i + 1).split(",");
+            String[] pubs = lines.get(i + 2).split(",");
             try {
-                Constructor<?> constructor = Class.forName(lines.get(i)).getDeclaredConstructor(List.class, List.class);
+                Constructor<?> constructor = Class.forName(lines.get(i)).getDeclaredConstructor(String[].class, String[].class);
                 Agent agent = (Agent) constructor.newInstance(subs, pubs);
                 ParallelAgent parallelAgent = new ParallelAgent(agent, 10);
                 parallelAgents.add(parallelAgent);

@@ -39,6 +39,9 @@ public class BinOpAgent implements Agent {
 
     @Override
     public void callback(String topic, Message msg) {
+        if (Double.isNaN(msg.asDouble)) {
+            return;
+        }
         if (topic.equals(this.firstTopic)) {
             this.firstMessage = msg.asDouble;
         } else if (topic.equals(this.secondTopic)) {

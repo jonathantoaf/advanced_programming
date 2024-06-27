@@ -10,9 +10,9 @@ public class IncAgent implements Agent {
     private final TopicManagerSingleton.TopicManager topicManager = TopicManagerSingleton.get();
     private Double x;
 
-    public IncAgent(List<String> subs, List<String> pubs) {
-        this.subs = subs.get(0);
-        this.pubs = pubs.get(0);
+    public IncAgent(String[] subs, String[] pubs) {
+        this.subs = subs[0];
+        this.pubs = pubs[0];
         this.subscribe();
         this.reset();
         this.name = "IncAgent";
@@ -34,6 +34,9 @@ public class IncAgent implements Agent {
 
     @Override
     public void callback(String topic, Message msg) {
+        if (Double.isNaN(msg.asDouble)) {
+            return;
+        }
         this.x = msg.asDouble;
         this.topicManager.getTopic(this.pubs).publish(new Message(this.x + 1));
         this.reset();
