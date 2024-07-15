@@ -53,8 +53,9 @@
             transition: background-color 0.3s ease;
         }
         button:hover {
-            background-color: #00003E; /* Darker blue */
+            background-color: #FFC1B1; /* Darker blue */
         }
+
     </style>
 </head>
 <body>
@@ -87,14 +88,22 @@
             method: 'POST',
             body: formData
         })
-            .then(response => response.text())
-            .then(html => {
-                const middleIframe = parent.document.querySelector('.center-frame iframe');
-                middleIframe.srcdoc = html;
+            .then(response => {
+                if (response.status === 200) {
+                    return response.text().then(html => {
+                        const middleIframe = parent.document.querySelector('.center-frame iframe');
+                        middleIframe.srcdoc = html;
+                    });
+                } else {
+                    return response.text().then(text => {
+                        console.error('Error:', text);
+                        alert('An error occurred while deploying the configuration.');
+                    });
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred while deploying the configuration.')
+                alert('An error occurred while deploying the configuration.');
             });
     }
 
