@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import test.GenericConfig;
 import test.Graph;
+import test.TopicManagerSingleton;
 import views.HtmlGraphWriter;
 
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class ConfLoader implements Servlet {
                 java.nio.file.Files.write(filePath, fileContent);
                 System.out.println("File " + fileName + " saved");
 
+                TopicManagerSingleton.get().clear();
                 // Create a graph from the config file
                 this.createConfig(filePath);
                 System.out.println("Config created");
