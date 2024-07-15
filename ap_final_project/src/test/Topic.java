@@ -7,11 +7,13 @@ public class Topic {
     public final String name;
     private List<Agent> subs;
     private List<Agent> pubs;
+    private Message lastMessage;
 
     Topic(String name) {
         this.name = name;
         this.subs = new ArrayList<Agent>();
         this.pubs = new ArrayList<Agent>();
+        this.lastMessage = new Message("0.0");
     }
 
     public void subscribe(Agent a) {
@@ -26,6 +28,11 @@ public class Topic {
         for (Agent ag : this.subs) {
             ag.callback(this.name, m);
         }
+        this.lastMessage = m;
+    }
+
+    public Message getLastMessage() {
+        return this.lastMessage;
     }
 
     public void addPublisher(Agent a) {

@@ -10,7 +10,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class TopicDisplayer implements Servlet {
@@ -19,15 +20,15 @@ public class TopicDisplayer implements Servlet {
     public void handle(RequestParser.RequestInfo ri, OutputStream toClient) throws IOException {
         if (ri.getParameters().size() == 2) {
             try {
-                String topic = ri.getParameters().get("topic");
+                String topic = ri.getParameters().get("topicName");
                 Message message = new Message(ri.getParameters().get("message"));
-//                TopicManagerSingleton.get().getTopic(topic).publish(message);
+                TopicManagerSingleton.get().getTopic(topic).publish(message);
                 Collection<test.Topic> topics = TopicManagerSingleton.get().getTopics();
-                ArrayList<String> topicNames = new ArrayList<>();
+                Map<String, String> topicMap = new HashMap<>();
                 for (test.Topic t : topics) {
-                    topicNames.add(t.name);
+                    topicMap.put(t.name, t.getLastMessage().asText);
                 }
-                ArrayList<String> tableHtml = HtmlTableWriter.getTableHtml(topicNames);
+                ArrayList<String> tableHtml = HtmlTableWriter.getTableHtml(topicMap);
                 System.out.println("Html generated for table");
                 toClient.write("HTTP/1.1 200 OK\r\n".getBytes());
                 toClient.write("Content-Type: text/html\r\n".getBytes());

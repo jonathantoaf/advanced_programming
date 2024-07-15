@@ -4,28 +4,26 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class HtmlTableWriter {
 
-    public static ArrayList<String> getTableHtml(ArrayList<String> topicNames) throws IOException {
+    public static ArrayList<String> getTableHtml(Map<String, String> topicMap) throws IOException {
         // Read the template HTML file
-        String htmlTemplate = new String(Files.readAllBytes(Paths.get("html_files/graph.html")));
+        String htmlContent = new String(Files.readAllBytes(Paths.get("html_files/table.html")));
 
         // Generate the table rows
         StringBuilder tableRows = new StringBuilder();
-        if (topicNames.isEmpty()) {
-            tableRows.append("<tr><td colspan=\"2\" class=\"no-data\">No data available</td></tr>");
-        } else {
-            for (String topic : topicNames) {
-                tableRows.append("<tr>")
-                        .append("<td>").append(topic).append("</td>")
-                        .append("<td>0</td>")
-                        .append("</tr>");
+        if (topicMap != null && !topicMap.isEmpty()) {
+            for (Map.Entry<String, String> entry : topicMap.entrySet()) {
+                tableRows.append("<tr><td>").append(entry.getKey()).append("</td><td>").append(entry.getValue()).append("</td></tr>\n");
             }
+            String placeholder = "            <tr id=\"null-data\">\n" +
+                    "                <td colspan=\"2\" class=\"no-data\">No data available</td>\n" +
+                    "            </tr>";
+            htmlContent = htmlContent.replace(placeholder, tableRows.toString());
         }
 
-        // Replace the placeholder with the actual table rows
-        String htmlContent = htmlTemplate.replace("{{TABLE_ROWS}}", tableRows.toString());
 
         // Convert the htmlContent to an ArrayList of Strings
         ArrayList<String> htmlLines = new ArrayList<>();
