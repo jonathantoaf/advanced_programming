@@ -7,8 +7,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.*;
@@ -94,35 +94,58 @@ public class MyHTTPServer extends Thread implements HTTPServer {
     public void run() {
         try {
             this.serverSocket = new ServerSocket(this.port);
+            this.serverSocket.setSoTimeout(1000); // Set the timeout to 1 second
             this.running = true;
             System.out.println("Server started on port " + this.port);
 
             while (this.running) {
-                Socket clientSocket = this.serverSocket.accept();
-                System.out.println("Client connected: " + clientSocket.getInetAddress());
-                threadPool.submit(() -> handleClient(clientSocket));
+                try {
+                    Socket clientSocket = this.serverSocket.accept();
+                    System.out.println("Client connected: " + clientSocket.getInetAddress());
+                    threadPool.submit(() -> handleClient(clientSocket));
+                } catch (SocketTimeoutException e) {
+                    // Timeout occurred, check if the server is still running
+                    // Continue to the next iteration of the loop
+                } catch (IOException e) {
+                    if (this.running) {
+                        e.printStackTrace();
+                    } else {
+                        System.out.println("Server socket closed, stopping server.");
+                    }
+                }
             }
+            System.out.println("Server stopped");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (this.serverSocket != null && !this.serverSocket.isClosed()) {
+                    this.serverSocket.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void close() {
         this.running = false;
+        threadPool.shutdown();
         try {
-            this.serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (!threadPool.awaitTermination(60, TimeUnit.SECONDS)) {
+                threadPool.shutdownNow();
+                if (!threadPool.awaitTermination(60, TimeUnit.SECONDS))
+                    System.err.println("ExecutorService did not terminate");
+            }
+        } catch (InterruptedException ie) {
+            threadPool.shutdownNow();
+            Thread.currentThread().interrupt();
         }
-        this.threadPool.shutdown();
-        try {
-            this.threadPool.awaitTermination(10, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
 
 }
+
 
 
 
