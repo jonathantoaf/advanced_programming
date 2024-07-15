@@ -22,6 +22,9 @@ public class TopicDisplayer implements Servlet {
             try {
                 String topic = ri.getParameters().get("topicName");
                 Message message = new Message(ri.getParameters().get("message"));
+                if (!TopicManagerSingleton.get().containsTopic(topic)) {
+                    throw new Exception("Topic does not exist");
+                }
                 TopicManagerSingleton.get().getTopic(topic).publish(message);
                 Collection<test.Topic> topics = TopicManagerSingleton.get().getTopics();
                 Map<String, String> topicMap = new HashMap<>();
@@ -38,7 +41,6 @@ public class TopicDisplayer implements Servlet {
                     toClient.write("\n".getBytes());
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 System.out.println("Error: " + e.getMessage());
                 toClient.write("HTTP/1.1 500 Internal Server Error\r\n".getBytes());
                 toClient.write("Content-Type: text/html\r\n".getBytes());

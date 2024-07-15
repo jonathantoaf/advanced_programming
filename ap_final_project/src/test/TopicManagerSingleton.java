@@ -25,6 +25,10 @@ public class TopicManagerSingleton {
             }
         }
 
+        public boolean containsTopic(String name) {
+            return this.topics.containsKey(name);
+        }
+
         public Collection<Topic> getTopics() {
             return this.topics.values();
         }

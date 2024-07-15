@@ -103,17 +103,27 @@
         const message = document.getElementById('message').value;
 
         fetch(`http://localhost:8080/publish?topicName=${topicName}&message=${message}`)
-            .then(response => response.text())
-            .then(html => {
-                const rightIframe = parent.document.querySelector('.right-frame iframe');
-                rightIframe.srcdoc = html;
+            .then(response => {
+                if (response.status === 200) {
+                    return response.text().then(text => {
+                        const rightIframe = parent.document.querySelector('.right-frame iframe');
+                        rightIframe.srcdoc = text;
+                    });
+                } else {
+                    return response.text().then(text => {
+                        if (response.status === 500 && text.includes('Topic does not exist')) {
+                            alert('The topic does not exist.');
+                        } else {
+                            console.error('Error:', text);
+                            alert('An error occurred while sending the message to the topic.');
+                        }
+                    });
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred while sending the message.')
+                alert('An error occurred while sending the message to the topic.');
             });
-
-
     }
 </script>
 </body>
