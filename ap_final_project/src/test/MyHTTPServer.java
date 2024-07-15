@@ -42,8 +42,8 @@ public class MyHTTPServer extends Thread implements HTTPServer {
         String httpCommand = ri.getHttpCommand();
         String[] uriSegments = ri.getUriSegments();
         Servlet servlet = null;
-        for (int i = uriSegments.length -1; i >= 0; i--) {
-            String[] uriSegmentsPrefix = Arrays.copyOf(uriSegments, i+1);
+        for (int i = uriSegments.length - 1; i >= 0; i--) {
+            String[] uriSegmentsPrefix = Arrays.copyOf(uriSegments, i + 1);
             String uriPrefix = "/" + String.join("/", uriSegmentsPrefix);
             if ((servlet = getRequestMap(httpCommand).get(uriPrefix)) != null) {
                 break;
@@ -53,12 +53,18 @@ public class MyHTTPServer extends Thread implements HTTPServer {
     }
 
     private ConcurrentMap<String, Servlet> getRequestMap(String httpCommand) {
-        return switch (httpCommand.toUpperCase()) {
-            case "GET" -> this.servletsGet;
-            case "POST" -> this.servletsPost;
-            case "DELETE" -> this.servletsDelete;
-            default -> throw new IllegalArgumentException("Invalid http command: " + httpCommand);
-        };
+        String upperHttpCommand = httpCommand.toUpperCase();
+        ConcurrentMap<String, Servlet> servlets;
+        if (upperHttpCommand.equals("GET")) {
+            servlets = this.servletsGet;
+        } else if (upperHttpCommand.equals("POST")) {
+            servlets = this.servletsPost;
+        } else if (upperHttpCommand.equals("DELETE")) {
+            servlets = this.servletsDelete;
+        } else {
+            throw new IllegalArgumentException("Invalid HTTP command: " + httpCommand);
+        }
+        return servlets;
     }
 
     private void handleClient(Socket clientSocket) {
@@ -116,57 +122,7 @@ public class MyHTTPServer extends Thread implements HTTPServer {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        MyHTTPServer server = new MyHTTPServer(8080, 10);
-        server.addServlet("GET", "/hello", new HelloServlet());
-        server.addServlet("POST", "/add", new addServlet());
-        server.start();
-
-        // To stop the server, you can use a separate thread or signal handling.
-        System.out.println("Press Enter to stop the server...");
-        System.in.read();
-        server.close();
-    }
 }
 
 
-class HelloServlet implements Servlet {
-    @Override
-    public void handle(RequestParser.RequestInfo ri, OutputStream toClient) throws IOException {
-        String responseBody = "Hello, world!";
-        toClient.write(("HTTP/1.1 200 OK\n" +
-                "Content-Type: text/plain\n" +
-                "Content-Length: " + responseBody.length() + "\n" +
-                "\n" +
-                responseBody).getBytes());
-        toClient.flush();
-    }
 
-    @Override
-    public void close() throws IOException {
-        // No resources to close
-    }
-}
-
-class addServlet implements Servlet {
-    @Override
-    public void handle(RequestParser.RequestInfo ri, OutputStream toClient) throws IOException {
-//       get parameters
-        Map<String, String> params = ri.getParameters();
-        String a = params.get("a");
-        String b = params.get("b");
-        int sum = Integer.parseInt(a) + Integer.parseInt(b);
-        String responseBody = "Sum: " + sum;
-        toClient.write(("HTTP/1.1 200 OK\n" +
-                "Content-Type: text/plain\n" +
-                "Content-Length: " + responseBody.length() + "\n" +
-                "\n" +
-                responseBody).getBytes());
-        toClient.flush();
-    }
-
-    @Override
-    public void close() throws IOException {
-        // No resources to close
-    }
-}
