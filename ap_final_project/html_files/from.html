@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forms</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #FFF8EF; /* Light cream */
+        }
+        h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #FFC1B1; /* Light red */
+            padding-bottom: 10px;
+        }
+        form {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #DD3344; /* Dark red */
+            border-radius: 10px;
+            background-color: #FFFFFF; /* White */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        input[type="file"],
+        input[type="text"],
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #FFC1B1; /* Light red */
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input[type="file"],
+        input[type="text"] {
+            background-color: #FFF0F0; /* Light red background */
+        }
+        button {
+            background-color: #000057; /* Dark blue */
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #00003E; /* Darker blue */
+        }
+    </style>
+</head>
+<body>
+<h2>Deploy Configuration</h2>
+<form id="deployForm">
+    <label for="configFile">Config File</label>
+    <input type="file" id="configFile" name="configFile" required>
+    <button type="button" onclick="deployConfig()">Deploy</button>
+</form>
+
+<h2>Send Message to Topic</h2>
+<form id="messageForm">
+    <label for="topicName">Topic Name</label>
+    <input type="text" id="topicName" name="topicName" required>
+
+    <label for="message">Message</label>
+    <input type="text" id="message" name="message" required>
+
+    <button type="button" onclick="sendMessageToTopic()">Send Message</button>
+</form>
+
+<script>
+    function deployConfig() {
+        const form = document.getElementById('deployForm');
+        const formData = new FormData(form);
+        const fileInput = document.getElementById('configFile');
+        formData.append('configFile', fileInput.files[0]);
+
+        fetch('http://localhost:8080/upload', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.text())
+            .then(html => {
+                const middleIframe = parent.document.querySelector('.center-frame iframe');
+                middleIframe.srcdoc = html;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deploying the configuration.')
+            });
+    }
+
+    function sendMessageToTopic() {
+        const topicName = document.getElementById('topicName').value;
+        const message = document.getElementById('message').value;
+
+        fetch(`http://localhost:8080/publish?topicName=${topicName}&message=${message}`)
+            .then(response => response.text())
+            .then(html => {
+                const rightIframe = parent.document.querySelector('.right-frame iframe');
+                rightIframe.srcdoc = html;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while sending the message.')
+            });
+
+
+    }
+</script>
+</body>
+</html>

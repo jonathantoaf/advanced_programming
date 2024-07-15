@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Graph Visualization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FFF8EF; /* Light cream */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #mynetwork {
+            width: 800px;
+            height: 600px;
+            border: 1px solid #DD3344; /* Dark red */
+            border-radius: 10px;
+            background-color: #FFFFFF; /* White */
+        }
+    </style>
+    <!-- Include vis.js library from CDN -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="mynetwork"></div>
+<script>
+    const nodes = new vis.DataSet([
+        // Nodes will be inserted here by Java code
+    ]);
+
+    const edges = new vis.DataSet([
+        // Edges will be inserted here by Java code
+    ]);
+
+    const container = document.getElementById('mynetwork');
+    const data = {
+        nodes: nodes,
+        edges: edges
+    };
+    const options = {
+        nodes: {
+            shape: 'dot',
+            size: 10,
+            font: {
+                size: 16
+            },
+            scaling: {
+                min: 10,
+                max: 30
+            }
+        },
+        edges: {
+            arrows: 'to',
+            color: '#000'
+        },
+        physics: {
+            enabled: true
+        }
+    };
+    const network = new vis.Network(container, data, options);
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Topics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+            background-color: #FFF8EF; /* Light cream */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            border: 1px solid #DD3344; /* Dark red */
+            border-radius: 10px;
+            background-color: #FFFFFF; /* White */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 100%;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin: 20px;
+            border-bottom: 2px solid #FFC1B1; /* Light red */
+            padding-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* Ensures table fits the container */
+            overflow: auto; /* Handles overflow if content exceeds available space */
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #DD3344; /* Dark red */
+            text-align: left;
+            word-wrap: break-word; /* Ensures long words break and fit within the cell */
+        }
+        th {
+            background-color: #FFC1B1; /* Light red */
+            color: #333;
+        }
+        td {
+            background-color: #FFF0F0; /* Light red background */
+        }
+        .no-data {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Topics</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Topic</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr id="null-data"> <!-- This row will be hidden if there is data -->
+            <td colspan="2" class="no-data">No data available</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

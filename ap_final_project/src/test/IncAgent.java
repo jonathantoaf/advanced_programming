@@ -14,12 +14,17 @@ public class IncAgent implements Agent {
         this.subs = subs[0];
         this.pubs = pubs[0];
         this.subscribe();
+        this.register();
         this.reset();
         this.name = "IncAgent";
     }
 
     private void subscribe() {
         this.topicManager.getTopic(this.subs).subscribe(this);
+    }
+
+    private void register() {
+        this.topicManager.getTopic(this.pubs).addPublisher(this);
     }
 
     @Override

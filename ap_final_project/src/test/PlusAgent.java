@@ -15,14 +15,18 @@ public class PlusAgent implements Agent {
         this.subs = subs;
         this.pubs = pubs;
         this.subscribe();
+        this.register();
         this.reset();
         this.name = "PlusAgent";
     }
 
     private void subscribe() {
-        for (String s : this.subs) {
-            this.topicManager.getTopic(s).subscribe(this);
-        }
+        this.topicManager.getTopic(this.subs[0]).subscribe(this);
+        this.topicManager.getTopic(this.subs[1]).subscribe(this);
+    }
+
+    private void register() {
+        this.topicManager.getTopic(this.pubs[0]).addPublisher(this);
     }
 
     @Override
