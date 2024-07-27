@@ -1,9 +1,9 @@
 package servlets;
 
-import test.Message;
-import test.RequestParser;
-import test.Servlet;
-import test.TopicManagerSingleton;
+import graph.Message;
+import graph.Topic;
+import server.RequestParser;
+import graph.TopicManagerSingleton;
 import views.HtmlTableWriter;
 
 import java.io.IOException;
@@ -26,9 +26,9 @@ public class TopicDisplayer implements Servlet {
                     throw new Exception("Topic does not exist");
                 }
                 TopicManagerSingleton.get().getTopic(topic).publish(message);
-                Collection<test.Topic> topics = TopicManagerSingleton.get().getTopics();
+                Collection<Topic> topics = TopicManagerSingleton.get().getTopics();
                 Map<String, String> topicMap = new HashMap<>();
-                for (test.Topic t : topics) {
+                for (Topic t : topics) {
                     topicMap.put(t.name, t.getLastMessage().asText);
                 }
                 ArrayList<String> tableHtml = HtmlTableWriter.getTableHtml(topicMap);

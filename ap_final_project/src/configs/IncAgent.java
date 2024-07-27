@@ -1,6 +1,8 @@
-package test;
+package configs;
 
-import java.util.List;
+import graph.Agent;
+import graph.Message;
+import graph.TopicManagerSingleton;
 
 public class IncAgent implements Agent {
 

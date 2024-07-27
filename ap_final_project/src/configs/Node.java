@@ -1,4 +1,6 @@
-package test;
+package configs;
+
+import graph.Message;
 
 import java.util.HashSet;
 import java.util.Set;

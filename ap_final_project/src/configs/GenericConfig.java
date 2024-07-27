@@ -1,8 +1,10 @@
-package test;
+package configs;
 
+
+import graph.Agent;
+import graph.ParallelAgent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.nio.file.*;
 import java.io.IOException;

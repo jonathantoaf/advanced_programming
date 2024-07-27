@@ -1,4 +1,8 @@
-package test;
+package configs;
+
+import graph.Agent;
+import graph.Topic;
+import graph.TopicManagerSingleton;
 
 import java.util.ArrayList;
 

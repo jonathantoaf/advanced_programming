@@ -1,5 +1,7 @@
-package test;
+package server;
 
+
+import servlets.Servlet;
 
 import java.io.BufferedReader;
 import java.io.IOException;

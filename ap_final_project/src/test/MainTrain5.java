@@ -12,7 +12,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-import test.RequestParser.RequestInfo;
+import server.MyHTTPServer;
+import server.RequestParser;
+import servlets.Servlet;
+import server.RequestParser.RequestInfo;
 
 
 public class MainTrain5 { // RequestParser

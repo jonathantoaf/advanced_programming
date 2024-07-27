@@ -1,9 +1,8 @@
 import servlets.ConfLoader;
 import servlets.HtmlLoader;
 import servlets.TopicDisplayer;
-import test.HTTPServer;
-import test.MyHTTPServer;
-import test.Servlet;
+import server.HTTPServer;
+import server.MyHTTPServer;
 
 import java.io.IOException;
 import java.nio.file.Path;

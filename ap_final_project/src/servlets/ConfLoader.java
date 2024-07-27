@@ -1,14 +1,13 @@
 package servlets;
 
-import test.Servlet;
-
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import test.GenericConfig;
-import test.Graph;
-import test.TopicManagerSingleton;
+import configs.GenericConfig;
+import configs.Graph;
+import graph.TopicManagerSingleton;
+import server.RequestParser;
 import views.HtmlGraphWriter;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class ConfLoader implements Servlet {
     }
 
     @Override
-    public void handle(test.RequestParser.RequestInfo ri, java.io.OutputStream toClient) throws IOException {
+    public void handle(RequestParser.RequestInfo ri, java.io.OutputStream toClient) throws IOException {
         if (ri.getContent().length > 0) {
             try {
                 System.out.println("post a config file request");

@@ -1,8 +1,8 @@
 package servlets;
 
-import java.nio.file.Path;
+import server.RequestParser;
 
-import test.Servlet;
+import java.nio.file.Path;
 
 
 public class HtmlLoader implements Servlet {
@@ -16,7 +16,7 @@ public class HtmlLoader implements Servlet {
     }
 
     @Override
-    public void handle(test.RequestParser.RequestInfo ri, java.io.OutputStream toClient) throws java.io.IOException {
+    public void handle(RequestParser.RequestInfo ri, java.io.OutputStream toClient) throws java.io.IOException {
 //        get the file name from the uri
         System.out.println("get html file request");
         String[] uriSegments = ri.getUriSegments();
