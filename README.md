@@ -84,15 +84,15 @@ D
 
 ### Initial Interface
 
-![Initial Interface](screenshots/1.png)
+![Initial Interface](ap_final_project/screenshots/1.png)
 
 ### After Uploading Configuration
 
-![Graph Visualization](screenshots/2.png)
+![Graph Visualization](ap_final_project/screenshots/2.png)
 
 ### After Publishing Messages
 
-![Topic Table](screenshots/3.png)
+![Topic Table](ap_final_project/screenshots/3.png)
 
 ## Project Structure
 
