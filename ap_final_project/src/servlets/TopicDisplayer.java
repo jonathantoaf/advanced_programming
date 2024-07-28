@@ -59,6 +59,6 @@ public class TopicDisplayer implements Servlet {
 
     @Override
     public void close() throws IOException {
-
+        System.out.println("Closing TopicDisplayer");
     }
 }

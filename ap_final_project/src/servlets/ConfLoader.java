@@ -14,6 +14,7 @@ import java.io.IOException;
 
 public class ConfLoader implements Servlet {
     private final Path configFilesPath;
+    private GenericConfig genericConfig;
 
     public ConfLoader(Path configFilesPath) {
         this.configFilesPath = configFilesPath;
@@ -70,11 +71,17 @@ public class ConfLoader implements Servlet {
 
     @Override
     public void close() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        System.out.println("Closing ConfLoader");
+        if (this.genericConfig != null) {
+            this.genericConfig.close();
+        }
     }
 
     private void createConfig(Path filePath) {
-        GenericConfig genericConfig = new GenericConfig();
+        if (this.genericConfig != null) {
+            this.genericConfig.close();
+        }
+        this.genericConfig = new GenericConfig();
         genericConfig.setConfFile(filePath.toString());
         genericConfig.create();
     }

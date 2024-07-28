@@ -45,7 +45,7 @@ public class HtmlLoader implements Servlet {
 
     @Override
     public void close() throws java.io.IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        System.out.println("Closing HtmlLoader");
     }
 
     private boolean checkFileExists(String fileName) {

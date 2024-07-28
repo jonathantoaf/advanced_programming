@@ -8,14 +8,15 @@ public class ParallelAgent implements Agent {
     private Agent agent;
     private Thread readThread;
     private static final String divider = "Divider:";
-
+    private volatile boolean running;
 
     public ParallelAgent(Agent agent, int capacity) {
         this.queue = new ArrayBlockingQueue<Message>(capacity);
         this.agent = agent;
         this.readThread = new Thread(this::readThreadFunction);
         this.readThread.start();
-    }
+        this.running = true;
+        }
 
     @Override
     public String getName() {
@@ -39,6 +40,7 @@ public class ParallelAgent implements Agent {
 
     @Override
     public void close() {
+        this.running = false;
         this.readThread.interrupt();
         this.agent.close();
     }
@@ -53,7 +55,7 @@ public class ParallelAgent implements Agent {
     }
 
     private void readThreadFunction() {
-        while (true) {
+        while (this.running) {
             try {
                 Message msg = this.queue.take();
                 this.agent.callback(getTopic(msg), getMessage(msg));

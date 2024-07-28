@@ -130,8 +130,33 @@ public class MyHTTPServer extends Thread implements HTTPServer {
         }
     }
 
+    private void closeServlets(){
+        for (Servlet servlet : servletsGet.values()) {
+            try {
+                servlet.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        for (Servlet servlet : servletsPost.values()) {
+            try {
+                servlet.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        for (Servlet servlet : servletsDelete.values()) {
+            try {
+                servlet.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void close() {
         this.running = false;
+        this.closeServlets();
         threadPool.shutdown();
         try {
             if (!threadPool.awaitTermination(60, TimeUnit.SECONDS)) {
