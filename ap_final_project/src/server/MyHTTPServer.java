@@ -1,8 +1,11 @@
+/**
+ * This package contains classes related to the HTTP server implementation.
+ * It includes the `MyHTTPServer` class, which serves as the core component
+ * for handling HTTP requests and managing servlets.
+ */
 package server;
 
-
 import servlets.Servlet;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,9 +16,17 @@ import java.net.SocketTimeoutException;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-
+/**
+ * The MyHTTPServer class is a simple multi-threaded HTTP server implementation.
+ * It supports GET, POST, and DELETE HTTP methods, allowing the registration of
+ * servlets to handle specific URI paths for these methods.
+ *
+ * <p>Each incoming request is processed in a separate thread using an ExecutorService.</p>
+ */
 public class MyHTTPServer extends Thread implements HTTPServer {
 
     private int port;
@@ -26,20 +37,45 @@ public class MyHTTPServer extends Thread implements HTTPServer {
     private volatile boolean running;
     private ServerSocket serverSocket;
 
+    /**
+     * Constructs a new MyHTTPServer instance.
+     *
+     * @param port     the port on which the server will listen for incoming connections
+     * @param nThreads the number of threads to allocate in the thread pool
+     */
     public MyHTTPServer(int port, int nThreads) {
         this.port = port;
         this.threadPool = Executors.newFixedThreadPool(nThreads);
         this.running = false;
     }
 
+    /**
+     * Adds a servlet to handle a specific HTTP command and URI.
+     *
+     * @param httpCommand the HTTP command (e.g., "GET", "POST", "DELETE")
+     * @param uri         the URI path the servlet will handle
+     * @param s           the servlet instance to handle the request
+     */
     public void addServlet(String httpCommand, String uri, Servlet s) {
         getRequestMap(httpCommand).put(uri, s);
     }
 
+    /**
+     * Removes a servlet that was handling a specific HTTP command and URI.
+     *
+     * @param httpCommand the HTTP command (e.g., "GET", "POST", "DELETE")
+     * @param uri         the URI path the servlet was handling
+     */
     public void removeServlet(String httpCommand, String uri) {
         getRequestMap(httpCommand).remove(uri);
     }
 
+    /**
+     * Retrieves the appropriate servlet for the given request information.
+     *
+     * @param ri the request information
+     * @return the servlet to handle the request, or null if no matching servlet is found
+     */
     private Servlet getServlet(RequestParser.RequestInfo ri) {
         String httpCommand = ri.getHttpCommand();
         String[] uriSegments = ri.getUriSegments();
@@ -54,21 +90,36 @@ public class MyHTTPServer extends Thread implements HTTPServer {
         return servlet;
     }
 
+    /**
+     * Returns the map of servlets for the given HTTP command.
+     *
+     * @param httpCommand the HTTP command (e.g., "GET", "POST", "DELETE")
+     * @return the map of servlets for the specified HTTP command
+     */
     private ConcurrentMap<String, Servlet> getRequestMap(String httpCommand) {
         String upperHttpCommand = httpCommand.toUpperCase();
         ConcurrentMap<String, Servlet> servlets;
-        if (upperHttpCommand.equals("GET")) {
-            servlets = this.servletsGet;
-        } else if (upperHttpCommand.equals("POST")) {
-            servlets = this.servletsPost;
-        } else if (upperHttpCommand.equals("DELETE")) {
-            servlets = this.servletsDelete;
-        } else {
-            throw new IllegalArgumentException("Invalid HTTP command: " + httpCommand);
+        switch (upperHttpCommand) {
+            case "GET":
+                servlets = this.servletsGet;
+                break;
+            case "POST":
+                servlets = this.servletsPost;
+                break;
+            case "DELETE":
+                servlets = this.servletsDelete;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid HTTP command: " + httpCommand);
         }
         return servlets;
     }
 
+    /**
+     * Handles a client connection, parsing the request and invoking the appropriate servlet.
+     *
+     * @param clientSocket the client socket connection
+     */
     private void handleClient(Socket clientSocket) {
         try (BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
              OutputStream output = clientSocket.getOutputStream()) {
@@ -93,6 +144,9 @@ public class MyHTTPServer extends Thread implements HTTPServer {
         }
     }
 
+    /**
+     * Starts the server, listening for incoming connections and dispatching them to handler threads.
+     */
     public void run() {
         try {
             this.serverSocket = new ServerSocket(this.port);
@@ -130,7 +184,10 @@ public class MyHTTPServer extends Thread implements HTTPServer {
         }
     }
 
-    private void closeServlets(){
+    /**
+     * Closes all registered servlets.
+     */
+    private void closeServlets() {
         for (Servlet servlet : servletsGet.values()) {
             try {
                 servlet.close();
@@ -154,6 +211,9 @@ public class MyHTTPServer extends Thread implements HTTPServer {
         }
     }
 
+    /**
+     * Stops the server and shuts down all resources.
+     */
     public void close() {
         this.running = false;
         this.closeServlets();
@@ -172,7 +232,3 @@ public class MyHTTPServer extends Thread implements HTTPServer {
     }
 
 }
-
-
-
-
