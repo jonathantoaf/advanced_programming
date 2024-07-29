@@ -15,6 +15,7 @@ import java.io.IOException;
 public class ConfLoader implements Servlet {
     private final Path configFilesPath;
     private GenericConfig genericConfig;
+    private final TopicManagerSingleton.TopicManager topicManager = TopicManagerSingleton.get();
 
     public ConfLoader(Path configFilesPath) {
         this.configFilesPath = configFilesPath;
@@ -34,9 +35,10 @@ public class ConfLoader implements Servlet {
                 java.nio.file.Files.write(filePath, fileContent);
                 System.out.println("File " + fileName + " saved");
 
-                TopicManagerSingleton.get().clear();
                 // Create a graph from the config file
                 this.createConfig(filePath);
+                System.out.println(topicManager.getTopics().size() + " topics created");
+                System.out.println();
                 System.out.println("Config created");
                 Graph graph = this.createGraph();
                 System.out.println("Graph created");
@@ -81,6 +83,7 @@ public class ConfLoader implements Servlet {
         if (this.genericConfig != null) {
             this.genericConfig.close();
         }
+        this.topicManager.clear();
         this.genericConfig = new GenericConfig();
         genericConfig.setConfFile(filePath.toString());
         genericConfig.create();
